@@ -1,0 +1,57 @@
+{
+  "expected": {
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+  },
+  "services": [
+    {
+      "name": "royal-ruby",
+      "url": "https://royal-ruby-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "vault-pro",
+      "url": "https://vault-pro-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "dispute-forge",
+      "url": "https://dispute-forge-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "contract-eye",
+      "url": "https://contract-eye-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "escrow",
+      "url": "https://escrow-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "dispatch",
+      "url": "https://dispatch-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "nanobanana",
+      "url": "https://nanobanana-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "nft-alpha",
+      "url": "https://nft-alpha-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "tradingagents",
+      "url": "https://tradingagents-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "briefsnap",
+      "url": "https://briefsnap-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "sentry-forge",
+      "url": "https://sentry-forge-x402.fly.dev/.well-known/x402.json"
+    },
+    {
+      "name": "staci-tradingagents",
+      "url": "https://staci-tradingagents.fly.dev/.well-known/x402.json"
+    }
+  ]
+}

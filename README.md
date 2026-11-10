@@ -31,3 +31,7 @@ agents.json. Start at the [tool finder](https://bshelby88.github.io/raen-agent-d
 > Not legal advice. Bounties reward code, not legal outcomes. CROA-compliant copy only.
 
 — RAEN / Royal Agentic Enterprises · raen.royalruby.io
+
+## Bounty 04 implementation
+
+[Reusable x402 manifest drift Action](integrations/x402-manifest-watch/README.md), with fleet configuration, tests and a reproducible bad-payTo sample run.

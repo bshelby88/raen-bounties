@@ -1,0 +1,22 @@
+name: x402 manifest drift watch
+description: Compare payment fields for every manifest and report drift on an issue or PR.
+inputs:
+  config:
+    description: JSON configuration path relative to the caller workspace; defaults to the bundled RAEN fleet.
+    default: ''
+  issue-number:
+    description: Issue or PR in the caller repository for the diff comment; defaults to the triggering PR.
+    default: ''
+  github-token:
+    description: Token with issues write permission for the report thread.
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - name: Check payment manifests
+      shell: bash
+      env:
+        X402_CONFIG: ${{ inputs.config }}
+        X402_ISSUE: ${{ inputs.issue-number }}
+        X402_TOKEN: ${{ inputs.github-token }}
+      run: python3 "$GITHUB_ACTION_PATH/watch.py"

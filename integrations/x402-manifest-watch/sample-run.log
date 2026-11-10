@@ -1,0 +1,20 @@
+Local fixture: manifest payTo changed from expected a1... to bb...
+<!-- raen-x402-manifest-watch -->
+x402 manifest watch: 0/1 services match expected payment fields.
+
+```diff
+--- fixture-service/expected
++++ fixture-service/actual
+@@ -1,7 +1,7 @@
+ {
+   "/api/demo/accepts/0": {
+     "network": "eip155:8453",
+-    "payTo": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
++    "payTo": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+     "scheme": "exact"
+   }
+ }
+```
+Checker exit code: 1
+GitHub API fixture comments: 1
+Comment contains diff: True

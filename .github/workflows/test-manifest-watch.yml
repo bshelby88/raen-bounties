@@ -1,0 +1,19 @@
+name: Test manifest drift Action
+on:
+  push:
+    branches: [bounty-4-manifest-drift]
+  pull_request:
+    paths:
+      - 'integrations/x402-manifest-watch/**'
+      - '.github/workflows/test-manifest-watch.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Run regression tests
+        run: python3 -m unittest discover -s integrations/x402-manifest-watch/tests -v
+      - name: Reproduce a bad payment destination and diff comment
+        run: python3 integrations/x402-manifest-watch/tests/demo.py
