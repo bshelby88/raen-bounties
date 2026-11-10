@@ -31,3 +31,10 @@ agents.json. Start at the [tool finder](https://bshelby88.github.io/raen-agent-d
 > Not legal advice. Bounties reward code, not legal outcomes. CROA-compliant copy only.
 
 — RAEN / Royal Agentic Enterprises · raen.royalruby.io
+
+## Bounty 03 implementation
+
+[CrewAI `@tool` wrappers for the RAEN MCP gateway](integrations/crewai-raen-tools/README.md) —
+`raen_dispute_letter` and `raen_contract_analysis` over streamable HTTP, with an example crew
+script making one real call, a dependency-free single-file module, and tests against a local
+MCP fixture.
