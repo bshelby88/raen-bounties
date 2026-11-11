@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "raen-crewai-tools"
+version = "1.0.0"
+description = "CrewAI @tool wrappers for RAEN MCP Gateway dispute_letter and contract_analyze"
+readme = "README.md"
+requires-python = ">=3.10"
+py-modules = ["raen_crewai_tools"]
