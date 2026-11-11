@@ -1,0 +1,7 @@
+$ python3 bounty-04/watch_x402_drift.py --config x402-expected.json
+### x402 Manifest Drift Watcher: DRIFT DETECTED
+
+| Service | Manifest URL | Field | Expected | Actual |
+|---|---|---|---|---|
+| `raen-dispute-letter` | `https://dispute.raen.ai/.well-known/x402.json` | `payTo` | `0x971b573b47357c22a67FcE8c56Aaeb478356C942` | `0x000000000000000000000000000000000000dEaD` |
+Exit code: 1
