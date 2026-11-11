@@ -1,0 +1,12 @@
+{
+  "name": "@raen/plugin-mcp-gateway",
+  "version": "1.0.0",
+  "description": "ElizaOS plugin connecting agents to the RAEN MCP Gateway (law_lookup, dispute_letter, image_generate, contract_analyze, tool_finder)",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "node --test test/plugin.test.mjs",
+    "demo": "node demo/law-lookup-demo.mjs"
+  }
+}
