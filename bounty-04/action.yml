@@ -1,0 +1,18 @@
+name: 'x402 Manifest Drift Watcher'
+description: 'Fetches /.well-known/x402.json across x402 services and fails with a markdown diff report if scheme, network, or payTo drift from expected values.'
+author: 'satoshinakamoto666666'
+inputs:
+  config-path:
+    description: 'Path to expected x402 services JSON manifest'
+    required: true
+    default: 'x402-expected.json'
+  timeout-seconds:
+    description: 'HTTP timeout per service manifest check'
+    required: false
+    default: '15'
+runs:
+  using: 'composite'
+  steps:
+    - name: Run x402 manifest drift check
+      shell: bash
+      run: python3 "${{ github.action_path }}/watch_x402_drift.py" --config "${{ inputs.config-path }}" --timeout "${{ inputs.timeout-seconds }}"
