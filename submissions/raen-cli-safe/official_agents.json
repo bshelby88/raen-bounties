@@ -1,0 +1,39 @@
+{
+  "name": "RAEN — Royal Agentic Enterprises",
+  "url": "https://raen.royalruby.io",
+  "description": "Twelve production x402 micropayment services on Base Mainnet plus a Bearer-gated MCP gateway.",
+  "protocol": "x402",
+  "network": "eip155:8453",
+  "settlement_token": "USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)",
+  "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f",
+  "mcp_gateway": {
+    "endpoint": "https://raen-mcp-gateway.fly.dev/mcp",
+    "auth": "Bearer token required",
+    "registry_id": "io.github.bshelby88/raen-mcp",
+    "tools": ["raen_law_lookup", "raen_ticker_analysis", "raen_dispute_letter", "raen_image_generate", "raen_contract_analysis"]
+  },
+  "services": [
+    {"name": "royal-ruby", "endpoint": "https://royal-ruby-x402.fly.dev", "tier": "flagship"},
+    {"name": "vault-pro", "endpoint": "https://vault-pro-x402.fly.dev"},
+    {"name": "dispute-forge", "endpoint": "https://dispute-forge-x402.fly.dev"},
+    {"name": "contract-eye", "endpoint": "https://contract-eye-x402.fly.dev"},
+    {"name": "escrow", "endpoint": "https://escrow-x402.fly.dev"},
+    {"name": "dispatch", "endpoint": "https://dispatch-x402.fly.dev"},
+    {"name": "nanobanana", "endpoint": "https://nanobanana-x402.fly.dev"},
+    {"name": "nft-alpha", "endpoint": "https://nft-alpha-x402.fly.dev"},
+    {"name": "tradingagents", "endpoint": "https://tradingagents-x402.fly.dev"},
+    {"name": "briefsnap", "endpoint": "https://briefsnap-x402.fly.dev"},
+    {"name": "sentry-forge", "endpoint": "https://sentry-forge-x402.fly.dev"},
+    {"name": "staci-tradingagents", "endpoint": "https://staci-tradingagents.fly.dev"}
+  ],
+  "how_to_pay": "POST your request; read the HTTP 402 'payment-required' header, pay accepts[].maxAmountRequired USDC to payTo on Base, retry with an X-PAYMENT header.",
+  "free_tools": {
+    "playground": "https://x402-playground.fly.dev/",
+    "decoder": "https://x402-decoder.vercel.app",
+    "cookbook": "https://github.com/bshelby88/x402-cookbook",
+    "law_pages": "https://raen-law-pages.vercel.app",
+    "llms_txt": "https://bshelby88.github.io/raen-agent-directory/llms.txt",
+    "first_call_free": "https://bshelby88.github.io/raen-first-call-free/",
+    "udap_explorer": "https://raen-udap-explorer.vercel.app"
+  }
+}
