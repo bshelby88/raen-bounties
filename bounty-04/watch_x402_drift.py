@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Callable, List, Optional
 
 MONITORED_FIELDS = ("scheme", "network", "payTo")
 
@@ -29,31 +30,104 @@ class ServiceDriftReport:
     error: str | None = None
 
 
-def extract_payment_entry(manifest: dict) -> dict:
-    """Extract scheme, network, and payTo from an x402 manifest (supports top-level or accepts[0])."""
-    accepts = manifest.get("accepts")
-    if isinstance(accepts, list) and accepts and isinstance(accepts[0], dict):
-        first = accepts[0]
-        return {
-            "scheme": str(first.get("scheme") or manifest.get("scheme") or ""),
-            "network": str(first.get("network") or manifest.get("network") or ""),
-            "payTo": str(first.get("payTo") or first.get("pay_to") or manifest.get("payTo") or ""),
-        }
-    return {
-        "scheme": str(manifest.get("scheme") or ""),
-        "network": str(manifest.get("network") or ""),
-        "payTo": str(manifest.get("payTo") or manifest.get("pay_to") or ""),
-    }
+def extract_payment_entries(manifest: dict) -> List[dict]:
+    """Extract payment options (scheme, network, and payTo) from an x402 manifest.
+
+    Supports:
+    - Top-level `accepts` (list or dict)
+    - Endpoint definitions in `endpoints[path].accepts` (list or dict)
+    - Nested methods in `endpoints[path].methods[verb].accepts`
+    - Top-level direct keys `scheme`, `network`, `payTo`
+    """
+    candidates: list[dict] = []
+
+    # 1. Top-level accepts
+    if "accepts" in manifest:
+        acc = manifest["accepts"]
+        if isinstance(acc, list):
+            candidates.extend(acc)
+        elif isinstance(acc, dict):
+            candidates.append(acc)
+
+    # 2. Endpoint mappings
+    endpoints = manifest.get("endpoints")
+    if isinstance(endpoints, dict):
+        for ep_info in endpoints.values():
+            if isinstance(ep_info, dict):
+                ep_acc = ep_info.get("accepts")
+                if isinstance(ep_acc, list):
+                    candidates.extend(ep_acc)
+                elif isinstance(ep_acc, dict):
+                    candidates.append(ep_acc)
+                methods = ep_info.get("methods")
+                if isinstance(methods, dict):
+                    for m_info in methods.values():
+                        if isinstance(m_info, dict) and "accepts" in m_info:
+                            m_acc = m_info["accepts"]
+                            if isinstance(m_acc, list):
+                                candidates.extend(m_acc)
+                            elif isinstance(m_acc, dict):
+                                candidates.append(m_acc)
+
+    # 3. Direct top-level fields
+    if "scheme" in manifest or "payTo" in manifest or "pay_to" in manifest:
+        candidates.append(manifest)
+
+    entries: list[dict] = []
+    seen = set()
+    for c in candidates:
+        if not isinstance(c, dict):
+            continue
+        scheme = str(c.get("scheme") or manifest.get("scheme") or "")
+        network = str(c.get("network") or manifest.get("network") or "")
+        pay_to = str(c.get("payTo") or c.get("pay_to") or manifest.get("payTo") or manifest.get("pay_to") or "")
+        key = (scheme, network.lower(), pay_to.lower())
+        if key not in seen:
+            seen.add(key)
+            entries.append({
+                "scheme": scheme,
+                "network": network,
+                "payTo": pay_to,
+            })
+
+    if not entries:
+        entries.append({
+            "scheme": str(manifest.get("scheme") or ""),
+            "network": str(manifest.get("network") or ""),
+            "payTo": str(manifest.get("payTo") or manifest.get("pay_to") or ""),
+        })
+    return entries
 
 
 def compare_manifest(service: str, manifest_url: str, expected: dict, actual_manifest: dict) -> ServiceDriftReport:
-    actual = extract_payment_entry(actual_manifest)
+    entries = extract_payment_entries(actual_manifest)
+    exp_scheme = str(expected.get("scheme", ""))
+    exp_net = str(expected.get("network", ""))
+    exp_payto = str(expected.get("payTo", ""))
+
+    # Find the matching entry for the expected scheme and network
+    selected = None
+    for e in entries:
+        if (
+            (not exp_scheme or e.get("scheme") == exp_scheme)
+            and (not exp_net or e.get("network") in (exp_net, exp_net.replace("eip155:8453", "base")))
+        ):
+            selected = e
+            break
+
+    if not selected:
+        selected = entries[0] if entries else {"scheme": "", "network": "", "payTo": ""}
+
     drifts: list[FieldDrift] = []
     for f in MONITORED_FIELDS:
         exp_val = str(expected.get(f, ""))
-        act_val = str(actual.get(f, ""))
-        if exp_val != act_val:
+        act_val = str(selected.get(f, ""))
+
+        # Address comparison is case-insensitive (EIP-55 checksum vs lowercase hex)
+        is_same = (exp_val.lower() == act_val.lower()) if f == "payTo" else (exp_val == act_val)
+        if not is_same:
             drifts.append(FieldDrift(field=f, expected=exp_val, actual=act_val))
+
     return ServiceDriftReport(
         service=service,
         manifest_url=manifest_url,
@@ -86,11 +160,29 @@ def check_fleet(
     expected_services: list[dict],
     fetcher: Callable[[str, int], dict] | None = None,
     timeout: int = 15,
+    retries: int = 2,
 ) -> tuple[bool, list[ServiceDriftReport]]:
     def default_fetch(url: str, to: int) -> dict:
-        req = urllib.request.Request(url, headers={"User-Agent": "x402-manifest-drift-watcher/1.0"})
-        with urllib.request.urlopen(req, timeout=to) as resp:
-            return json.loads(resp.read().decode("utf-8"))
+        import time
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": "x402-manifest-drift-watcher/2.0",
+                "Accept": "application/json",
+            },
+        )
+        last_exc: Exception | None = None
+        for attempt in range(retries + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=to) as resp:
+                    return json.loads(resp.read().decode("utf-8"))
+            except Exception as exc:
+                last_exc = exc
+                if attempt < retries:
+                    time.sleep(1.5 * (attempt + 1))
+        if last_exc:
+            raise last_exc
+        raise RuntimeError(f"Failed to fetch {url}")
 
     fetch_fn = fetcher or default_fetch
     reports: list[ServiceDriftReport] = []
@@ -115,6 +207,17 @@ def check_fleet(
     return all_ok, reports
 
 
+def write_step_summary(content: str) -> None:
+    """Write markdown summary to GITHUB_STEP_SUMMARY when executing in GitHub Actions."""
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        try:
+            with open(summary_path, "a", encoding="utf-8") as f:
+                f.write(f"\n{content}\n")
+        except Exception as e:
+            print(f"[warn] Failed writing to GITHUB_STEP_SUMMARY: {e}", file=sys.stderr)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Watch /.well-known/x402.json manifests for drift.")
     ap.add_argument("--config", required=True, help="Path to expected services JSON config")
@@ -124,7 +227,9 @@ def main(argv: list[str] | None = None) -> int:
     cfg = json.loads(Path(args.config).read_text(encoding="utf-8"))
     services = cfg.get("services", cfg) if isinstance(cfg, dict) else cfg
     all_ok, reports = check_fleet(services, timeout=args.timeout)
-    print(render_diff_comment(reports))
+    comment = render_diff_comment(reports)
+    print(comment)
+    write_step_summary(comment)
     return 0 if all_ok else 1
 
 

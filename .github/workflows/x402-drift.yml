@@ -1,0 +1,30 @@
+name: 'x402 Manifest Drift Watcher'
+
+on:
+  schedule:
+    # Run twice daily at 00:00 and 12:00 UTC
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bounty-04/**'
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run x402 manifest drift watcher
+        uses: ./bounty-04
+        with:
+          config-path: 'bounty-04/x402-expected.json'
+          timeout-seconds: '15'

@@ -1,0 +1,91 @@
+{
+  "fleet": "RAEN x402 Micropayment Fleet (Base Mainnet)",
+  "settlement_token": "USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)",
+  "canonical_pay_to": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f",
+  "services": [
+    {
+      "service": "royal-ruby",
+      "url": "https://royal-ruby-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "vault-pro",
+      "url": "https://vault-pro-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "dispute-forge",
+      "url": "https://dispute-forge-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "contract-eye",
+      "url": "https://contract-eye-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "escrow",
+      "url": "https://escrow-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "dispatch",
+      "url": "https://dispatch-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "nanobanana",
+      "url": "https://nanobanana-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "nft-alpha",
+      "url": "https://nft-alpha-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "tradingagents",
+      "url": "https://tradingagents-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "briefsnap",
+      "url": "https://briefsnap-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "sentry-forge",
+      "url": "https://sentry-forge-x402.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    },
+    {
+      "service": "staci-tradingagents",
+      "url": "https://staci-tradingagents.fly.dev",
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "payTo": "0x9b8a27e03ceba490953cda8ab1291c0e13baf72f"
+    }
+  ]
+}

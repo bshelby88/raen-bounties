@@ -1,0 +1,126 @@
+{
+  "name": "raen-ide-extension",
+  "displayName": "RAEN Fleet & MCP Tools",
+  "description": "Surfaces RAEN SKUs, fleet directory catalog, per-call micro-pricing, and paid MCP execution directly inside Cursor and VS Code.",
+  "version": "1.0.0",
+  "publisher": "raen",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "AI",
+    "Machine Learning",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:raenSkuExplorer"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "raen-explorer",
+          "title": "RAEN Fleet",
+          "icon": "$(server)"
+        }
+      ]
+    },
+    "views": {
+      "raen-explorer": [
+        {
+          "id": "raenSkuExplorer",
+          "name": "RAEN SKUs & MCP Tools"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "raen.refreshCatalog",
+        "title": "Refresh Fleet Catalog",
+        "category": "RAEN",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "raen.runLawLookup",
+        "title": "Run Law Lookup (FCRA/FDCPA)",
+        "category": "RAEN",
+        "icon": "$(law)"
+      },
+      {
+        "command": "raen.runContractAnalyze",
+        "title": "Audit Contract Selection",
+        "category": "RAEN",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "raen.setApiKey",
+        "title": "Set RAEN Gateway Dev Key",
+        "category": "RAEN",
+        "icon": "$(key)"
+      },
+      {
+        "command": "raen.configureCursorMcp",
+        "title": "Configure Cursor MCP Server (.cursor/mcp.json)",
+        "category": "RAEN",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "raen.refreshCatalog",
+          "when": "view == raenSkuExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "raen.setApiKey",
+          "when": "view == raenSkuExplorer",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "raen.runContractAnalyze",
+          "when": "editorHasSelection",
+          "group": "raen@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RAEN Fleet",
+      "properties": {
+        "raen.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "RAEN MCP Gateway Bearer dev key (request via POST https://raen-mcp-gateway.fly.dev/keys/request)."
+        },
+        "raen.gatewayUrl": {
+          "type": "string",
+          "default": "https://raen-mcp-gateway.fly.dev/mcp",
+          "description": "RAEN MCP Gateway streamable HTTP endpoint."
+        },
+        "raen.catalogUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/bshelby88/raen-agent-directory/main/llms.txt",
+          "description": "URL to the RAEN fleet directory manifest (llms.txt)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/catalog.test.mjs tests/mcpClient.test.mjs"
+  },
+  "keywords": [
+    "raen",
+    "cursor",
+    "mcp",
+    "model-context-protocol",
+    "copilot",
+    "x402",
+    "legal",
+    "contracts"
+  ],
+  "author": "Alhibb",
+  "license": "MIT"
+}
