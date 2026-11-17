@@ -1,0 +1,34 @@
+{
+  "name": "@elizaos/plugin-raen",
+  "version": "1.0.0",
+  "description": "ElizaOS plugin for the RAEN MCP Gateway — legal research, dispute letters, contract analysis, image generation, and tool discovery.",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/plugin.test.mjs",
+    "demo": "node demo/law-lookup-demo.mjs"
+  },
+  "keywords": [
+    "elizaos",
+    "elizaos-plugin",
+    "raen",
+    "mcp",
+    "x402",
+    "legal-research",
+    "fcra",
+    "dispute-letters",
+    "contract-analysis"
+  ],
+  "author": "Alhibb",
+  "license": "MIT",
+  "peerDependencies": {
+    "@elizaos/core": ">=0.1.0"
+  }
+}
